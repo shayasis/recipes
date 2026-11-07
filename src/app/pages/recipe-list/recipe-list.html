@@ -1,0 +1,28 @@
+<section class="hero">
+  <h1>מה מבשלים היום?</h1>
+  <div class="filters">
+    <input type="search" placeholder="חיפוש מתכון..." [value]="search()" (input)="search.set($any($event.target).value)" />
+    <select [value]="category()" (change)="category.set($any($event.target).value)">
+      <option value="">כל הקטגוריות</option>
+      @for (c of categories(); track c) {
+        <option [value]="c">{{ c }}</option>
+      }
+    </select>
+  </div>
+</section>
+
+<div class="grid">
+  @for (r of filtered(); track r.id) {
+    <a class="card" [routerLink]="['/recipe', r.id]">
+      <img [src]="r.imageUrl || 'https://placehold.co/600x400?text=Recipe'" [alt]="r.title" />
+      <div class="body">
+        <span class="tag">{{ r.category }}</span>
+        <h3>{{ r.title }}</h3>
+        <p>{{ r.description }}</p>
+        <small>⏱ {{ r.prepMinutes }} דק׳ · 🍽 {{ r.servings }} מנות</small>
+      </div>
+    </a>
+  } @empty {
+    <p class="empty">לא נמצאו מתכונים.</p>
+  }
+</div>

@@ -1,0 +1,28 @@
+@if (recipe(); as r) {
+  <article>
+    <a routerLink="/" class="back">→ חזרה לכל המתכונים</a>
+    <img [src]="r.imageUrl || 'https://placehold.co/1000x500?text=Recipe'" [alt]="r.title" />
+    <h1>{{ r.title }}</h1>
+    <p class="desc">{{ r.description }}</p>
+    <p class="meta">{{ r.category }} · ⏱ {{ r.prepMinutes }} דק׳ · 🍽 {{ r.servings }} מנות</p>
+
+    <div class="cols">
+      <section>
+        <h2>מצרכים</h2>
+        <ul>
+          @for (i of r.ingredients; track $index) { <li>{{ i }}</li> }
+        </ul>
+      </section>
+      <section>
+        <h2>אופן ההכנה</h2>
+        <ol>
+          @for (s of r.steps; track $index) { <li>{{ s }}</li> }
+        </ol>
+      </section>
+    </div>
+
+    <button class="btn secondary" (click)="remove()">מחיקת מתכון</button>
+  </article>
+} @else {
+  <p>המתכון לא נמצא. <a routerLink="/">חזרה</a></p>
+}

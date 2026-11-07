@@ -1,0 +1,5 @@
+form { max-width: 700px; margin: 0 auto; padding: 24px 0 48px; }
+.field { margin-bottom: 16px; flex: 1; min-width: 150px; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.error { color: #c0392b; }
+input.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched { border-color: #c0392b; }

@@ -1,0 +1,9 @@
+article { max-width: 850px; margin: 0 auto; padding: 24px 0 48px; }
+.back { color: var(--accent); display: inline-block; margin-bottom: 16px; }
+img { width: 100%; max-height: 380px; object-fit: cover; border-radius: var(--radius); }
+h1 { margin: 20px 0 6px; }
+.desc { font-size: 1.1rem; margin: 0 0 6px; }
+.meta { color: var(--muted); margin: 0 0 24px; }
+.cols { display: grid; grid-template-columns: 1fr 1.6fr; gap: 32px; margin-bottom: 32px; }
+li { margin-bottom: 8px; line-height: 1.6; }
+@media (max-width: 700px) { .cols { grid-template-columns: 1fr; gap: 8px; } }
