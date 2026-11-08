@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import { RecipeService } from '../../services/recipe.service';
 
 @Component({
@@ -9,7 +10,8 @@ import { RecipeService } from '../../services/recipe.service';
   styleUrl: './recipe-list.scss',
 })
 export class RecipeList {
-  private readonly recipeService = inject(RecipeService);
+  protected readonly recipeService = inject(RecipeService);
+  protected readonly auth = inject(AuthService);
 
   protected readonly search = signal('');
   protected readonly category = signal('');
@@ -23,4 +25,12 @@ export class RecipeList {
       (!term || r.title.toLowerCase().includes(term) || r.description.toLowerCase().includes(term))
     );
   });
+
+  protected async addSamples(): Promise<void> {
+    try {
+      await this.recipeService.addSamples();
+    } catch {
+      alert('ההוספה נכשלה. בדוק שאתה מחובר כמנהל.');
+    }
+  }
 }

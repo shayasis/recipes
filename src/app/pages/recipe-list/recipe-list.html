@@ -11,18 +11,29 @@
   </div>
 </section>
 
-<div class="grid">
-  @for (r of filtered(); track r.id) {
-    <a class="card" [routerLink]="['/recipe', r.id]">
-      <img [src]="r.imageUrl || 'https://placehold.co/600x400?text=Recipe'" [alt]="r.title" />
-      <div class="body">
-        <span class="tag">{{ r.category }}</span>
-        <h3>{{ r.title }}</h3>
-        <p>{{ r.description }}</p>
-        <small>⏱ {{ r.prepMinutes }} דק׳ · 🍽 {{ r.servings }} מנות</small>
+@if (recipeService.loading()) {
+  <p class="empty">טוען מתכונים...</p>
+} @else if (recipeService.error()) {
+  <p class="empty">{{ recipeService.error() }}</p>
+} @else {
+  <div class="grid">
+    @for (r of filtered(); track r.id) {
+      <a class="card" [routerLink]="['/recipe', r.id]">
+        <img [src]="r.imageUrl || 'https://placehold.co/600x400?text=Recipe'" [alt]="r.title" />
+        <div class="body">
+          <span class="tag">{{ r.category }}</span>
+          <h3>{{ r.title }}</h3>
+          <p>{{ r.description }}</p>
+          <small>⏱ {{ r.prepMinutes }} דק׳ · 🍽 {{ r.servings }} מנות</small>
+        </div>
+      </a>
+    } @empty {
+      <div class="empty">
+        <p>{{ recipeService.recipes().length ? 'לא נמצאו מתכונים.' : 'עדיין אין מתכונים.' }}</p>
+        @if (auth.isAdmin() && !recipeService.recipes().length) {
+          <button class="btn secondary" (click)="addSamples()">הוספת מתכוני דוגמה</button>
+        }
       </div>
-    </a>
-  } @empty {
-    <p class="empty">לא נמצאו מתכונים.</p>
-  }
-</div>
+    }
+  </div>
+}

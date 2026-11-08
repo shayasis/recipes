@@ -1,3 +1,5 @@
 header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
 .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; }
 .logo { font-size: 1.3rem; font-weight: 700; }
+nav { display: flex; align-items: center; gap: 14px; }
+.link { background: none; border: none; font: inherit; color: var(--muted); cursor: pointer; padding: 0; &:hover { color: var(--accent); } }

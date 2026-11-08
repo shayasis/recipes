@@ -1,7 +1,14 @@
 <header>
   <div class="container bar">
     <a routerLink="/" class="logo">🍳 המתכונים שלי</a>
-    <a routerLink="/new" class="btn">+ מתכון חדש</a>
+    <nav>
+      @if (auth.isAdmin()) {
+        <a routerLink="/new" class="btn">+ מתכון חדש</a>
+        <button class="link" (click)="logout()">התנתקות</button>
+      } @else {
+        <a routerLink="/login" class="link">כניסת מנהל</a>
+      }
+    </nav>
   </div>
 </header>
 <main class="container">

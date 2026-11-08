@@ -1,11 +1,14 @@
 import { Injectable, computed, signal } from '@angular/core';
+import {
+  addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp,
+} from 'firebase/firestore/lite';
+import { db } from '../firebase';
 import { Recipe } from '../models/recipe';
 
-const STORAGE_KEY = 'recipes';
+const recipesCol = collection(db, 'recipes');
 
-const SAMPLE_RECIPES: Recipe[] = [
+export const SAMPLE_RECIPES: Omit<Recipe, 'id'>[] = [
   {
-    id: 'shakshuka',
     title: 'שקשוקה',
     description: 'ביצים ברוטב עגבניות חריף, קלאסיקה של ארוחת בוקר.',
     category: 'ארוחת בוקר',
@@ -20,7 +23,6 @@ const SAMPLE_RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'hummus',
     title: 'חומוס ביתי',
     description: 'חומוס חלק וקרמי עם טחינה ולימון.',
     category: 'מנות ראשונות',
@@ -38,39 +40,53 @@ const SAMPLE_RECIPES: Recipe[] = [
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
-  private readonly _recipes = signal<Recipe[]>(this.load());
+  private readonly _recipes = signal<Recipe[]>([]);
+  private readonly _loading = signal(true);
+  private readonly _error = signal('');
 
   readonly recipes = this._recipes.asReadonly();
+  readonly loading = this._loading.asReadonly();
+  readonly error = this._error.asReadonly();
   readonly categories = computed(() => [...new Set(this._recipes().map(r => r.category))]);
+
+  constructor() {
+    this.refresh();
+  }
+
+  async refresh(): Promise<void> {
+    this._loading.set(true);
+    this._error.set('');
+    try {
+      const snap = await getDocs(query(recipesCol, orderBy('createdAt', 'desc')));
+      this._recipes.set(snap.docs.map(d => ({ ...(d.data() as Omit<Recipe, 'id'>), id: d.id })));
+    } catch (e) {
+      console.error(e);
+      this._error.set('לא הצלחנו לטעון את המתכונים.');
+    } finally {
+      this._loading.set(false);
+    }
+  }
 
   getById(id: string): Recipe | undefined {
     return this._recipes().find(r => r.id === id);
   }
 
-  add(recipe: Omit<Recipe, 'id'>): Recipe {
-    const created: Recipe = { ...recipe, id: crypto.randomUUID() };
-    this._recipes.update(list => [created, ...list]);
-    this.save();
-    return created;
+  /** Only succeeds for the admin; Firestore rules reject everyone else. */
+  async add(recipe: Omit<Recipe, 'id'>): Promise<string> {
+    const ref = await addDoc(recipesCol, { ...recipe, createdAt: serverTimestamp() });
+    await this.refresh();
+    return ref.id;
   }
 
-  remove(id: string): void {
+  async remove(id: string): Promise<void> {
+    await deleteDoc(doc(db, 'recipes', id));
     this._recipes.update(list => list.filter(r => r.id !== id));
-    this.save();
   }
 
-  private load(): Recipe[] {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : SAMPLE_RECIPES;
-    } catch {
-      return SAMPLE_RECIPES;
+  async addSamples(): Promise<void> {
+    for (const r of [...SAMPLE_RECIPES].reverse()) {
+      await addDoc(recipesCol, { ...r, createdAt: serverTimestamp() });
     }
-  }
-
-  private save(): void {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this._recipes()));
-    } catch {}
+    await this.refresh();
   }
 }

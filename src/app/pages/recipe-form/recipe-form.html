@@ -15,5 +15,8 @@
   @if (form.invalid && form.touched) {
     <p class="error">יש למלא את כל שדות החובה (*)</p>
   }
-  <button class="btn" type="submit">שמירת מתכון</button>
+  @if (saveError()) {
+    <p class="error">{{ saveError() }}</p>
+  }
+  <button class="btn" type="submit" [disabled]="saving()">{{ saving() ? 'שומר...' : 'שמירת מתכון' }}</button>
 </form>

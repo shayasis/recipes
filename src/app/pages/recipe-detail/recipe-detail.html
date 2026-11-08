@@ -21,8 +21,12 @@
       </section>
     </div>
 
-    <button class="btn secondary" (click)="remove()">מחיקת מתכון</button>
+    @if (auth.isAdmin()) {
+      <button class="btn secondary" (click)="remove()">מחיקת מתכון</button>
+    }
   </article>
+} @else if (recipeService.loading()) {
+  <p>טוען...</p>
 } @else {
   <p>המתכון לא נמצא. <a routerLink="/">חזרה</a></p>
 }

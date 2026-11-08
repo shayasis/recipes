@@ -1,0 +1,9 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <h1>כניסת מנהל</h1>
+  <div class="field"><label>אימייל</label><input type="email" formControlName="email" dir="ltr" autocomplete="username" /></div>
+  <div class="field"><label>סיסמה</label><input type="password" formControlName="password" dir="ltr" autocomplete="current-password" /></div>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <button class="btn" type="submit" [disabled]="busy()">{{ busy() ? 'מתחבר...' : 'כניסה' }}</button>
+</form>
