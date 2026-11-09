@@ -21,6 +21,14 @@ export class RecipeDetail {
   protected readonly checked = signal(new Set<number>());
   protected readonly exporting = signal(false);
 
+  /** Opens WhatsApp (app on phones, WhatsApp Web on desktop) with the recipe name and link. */
+  protected readonly whatsappUrl = computed(() => {
+    const r = this.recipe();
+    if (!r) return '';
+    const text = `🍳 ${r.title} - מתוך "סבתא מלכה מבשלת"\n${r.description ? r.description + '\n' : ''}${location.href}`;
+    return `https://wa.me/?text=${encodeURIComponent(text)}`;
+  });
+
   constructor() {
     // Reset the ingredient checklist when moving to another recipe.
     effect(() => {

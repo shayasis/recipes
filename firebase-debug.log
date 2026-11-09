@@ -1,0 +1,24 @@
+[debug] [2026-11-09T21:30:15.629Z] ----------------------------------------------------------------------
+[debug] [2026-11-09T21:30:15.634Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Aman\AppData\Local\npm-cache\_npx\ba4f1959e38407b5\node_modules\firebase-tools\lib\bin\firebase.js init hosting:github --project recipes-10c41
+[debug] [2026-11-09T21:30:15.635Z] CLI Version:   15.35.0
+[debug] [2026-11-09T21:30:15.635Z] Platform:      win32
+[debug] [2026-11-09T21:30:15.635Z] Node Version:  v22.13.1
+[debug] [2026-11-09T21:30:15.636Z] Detected Agent: unknown
+[debug] [2026-11-09T21:30:15.636Z] Time:          Mon Nov 09 2026 23:30:15 GMT+0200 (שעון ישראל (חורף))
+[debug] [2026-11-09T21:30:15.637Z] ----------------------------------------------------------------------
+[debug] 
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\Aman\Desktop\recipes
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+

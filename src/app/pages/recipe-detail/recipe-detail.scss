@@ -73,6 +73,11 @@ article { max-width: 1000px; padding-top: 24px; }
   small { color: var(--muted); font-size: .8rem; }
 }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn.whatsapp {
+  background: #25d366;
+  box-shadow: 0 6px 16px -6px rgba(37, 211, 102, .6);
+  &:hover { background: #1ebe5a; box-shadow: 0 10px 22px -8px rgba(37, 211, 102, .7); }
+}
 
 .cols { display: grid; grid-template-columns: 1fr 1.5fr; gap: 28px; align-items: start; }
 h2 { font-size: 1.45rem; margin: 0 0 4px; }
