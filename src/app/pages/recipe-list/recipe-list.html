@@ -1,39 +1,69 @@
 <section class="hero">
-  <h1>מה מבשלים היום?</h1>
-  <div class="filters">
-    <input type="search" placeholder="חיפוש מתכון..." [value]="search()" (input)="search.set($any($event.target).value)" />
-    <select [value]="category()" (change)="category.set($any($event.target).value)">
-      <option value="">כל הקטגוריות</option>
-      @for (c of categories(); track c) {
-        <option [value]="c">{{ c }}</option>
-      }
-    </select>
-  </div>
-</section>
+  <div class="container">
+    <span class="eyebrow">ספר המתכונים הדיגיטלי</span>
+    <h1>מה <span class="grad">מבשלים</span> היום?</h1>
+    <p class="lead">מתכונים ביתיים, פשוטים וטעימים, במקום אחד.</p>
 
-@if (recipeService.loading()) {
-  <p class="empty">טוען מתכונים...</p>
-} @else if (recipeService.error()) {
-  <p class="empty">{{ recipeService.error() }}</p>
-} @else {
-  <div class="grid">
-    @for (r of filtered(); track r.id) {
-      <a class="card" [routerLink]="['/recipe', r.id]">
-        <img [src]="r.imageUrl || 'https://placehold.co/600x400?text=Recipe'" [alt]="r.title" />
-        <div class="body">
-          <span class="tag">{{ r.category }}</span>
-          <h3>{{ r.title }}</h3>
-          <p>{{ r.description }}</p>
-          <small>⏱ {{ r.prepMinutes }} דק׳ · 🍽 {{ r.servings }} מנות</small>
-        </div>
-      </a>
-    } @empty {
-      <div class="empty">
-        <p>{{ recipeService.recipes().length ? 'לא נמצאו מתכונים.' : 'עדיין אין מתכונים.' }}</p>
-        @if (auth.isAdmin() && !recipeService.recipes().length) {
-          <button class="btn secondary" (click)="addSamples()">הוספת מתכוני דוגמה</button>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" placeholder="חפשו מתכון, למשל שקשוקה..." [value]="search()" (input)="search.set($any($event.target).value)" />
+    </div>
+
+    @if (categories().length) {
+      <div class="chips">
+        <button class="chip" [class.active]="!category()" (click)="category.set('')">הכל</button>
+        @for (c of categories(); track c) {
+          <button class="chip" [class.active]="category() === c" (click)="category.set(c)">{{ c }}</button>
         }
       </div>
     }
   </div>
-}
+</section>
+
+<section class="container">
+  @if (recipeService.loading()) {
+    <div class="grid">
+      @for (i of [1, 2, 3]; track i) { <div class="skeleton card-skel"></div> }
+    </div>
+  } @else if (recipeService.error()) {
+    <div class="empty">
+      <div class="empty-icon">😕</div>
+      <p>{{ recipeService.error() }}</p>
+      <button class="btn secondary" (click)="recipeService.refresh()">נסו שוב</button>
+    </div>
+  } @else {
+    @if (filtered().length) {
+      <p class="count">{{ filtered().length }} מתכונים</p>
+    }
+    <div class="grid">
+      @for (r of filtered(); track r.id; let i = $index) {
+        <a class="card fade-in" [routerLink]="['/recipe', r.id]" [style.animation-delay.ms]="i * 60">
+          <div class="media">
+            @if (r.imageUrl) {
+              <img [src]="r.imageUrl" [alt]="r.title" loading="lazy" />
+            } @else {
+              <div class="placeholder">🍽️</div>
+            }
+            <span class="tag">{{ r.category }}</span>
+          </div>
+          <div class="body">
+            <h3>{{ r.title }}</h3>
+            <p>{{ r.description }}</p>
+            <div class="meta">
+              <span>⏱ {{ r.prepMinutes }} דק׳</span>
+              <span>👥 {{ r.servings }} מנות</span>
+            </div>
+          </div>
+        </a>
+      } @empty {
+        <div class="empty">
+          <div class="empty-icon">{{ recipeService.recipes().length ? '🔍' : '📖' }}</div>
+          <p>{{ recipeService.recipes().length ? 'לא נמצאו מתכונים שמתאימים לחיפוש.' : 'עדיין אין מתכונים.' }}</p>
+          @if (auth.isAdmin() && !recipeService.recipes().length) {
+            <button class="btn" (click)="addSamples()">הוספת מתכוני דוגמה</button>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

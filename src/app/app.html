@@ -1,16 +1,25 @@
 <header>
   <div class="container bar">
-    <a routerLink="/" class="logo">🍳 המתכונים שלי</a>
+    <a routerLink="/" class="logo">
+      <span class="logo-mark">🍳</span>
+      <span>המתכונים שלי</span>
+    </a>
     <nav>
       @if (auth.isAdmin()) {
-        <a routerLink="/new" class="btn">+ מתכון חדש</a>
-        <button class="link" (click)="logout()">התנתקות</button>
+        <a routerLink="/new" class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="hide-sm">מתכון חדש</span>
+        </a>
+        <button class="btn ghost" (click)="logout()">התנתקות</button>
       } @else {
-        <a routerLink="/login" class="link">כניסת מנהל</a>
+        <a routerLink="/login" class="btn ghost">כניסת מנהל</a>
       }
     </nav>
   </div>
 </header>
-<main class="container">
+<main>
   <router-outlet />
 </main>
+<footer>
+  <div class="container">נבנה באהבה 🧡 · המתכונים שלי</div>
+</footer>

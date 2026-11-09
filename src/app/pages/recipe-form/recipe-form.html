@@ -1,22 +1,46 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <h1>מתכון חדש</h1>
+<div class="container">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="panel fade-in">
+    <div class="head">
+      <span class="head-icon">📝</span>
+      <div>
+        <h1>מתכון חדש</h1>
+        <p>מלאו את הפרטים והמתכון יופיע באתר לכולם.</p>
+      </div>
+    </div>
 
-  <div class="field"><label>שם המתכון *</label><input formControlName="title" /></div>
-  <div class="field"><label>תיאור קצר</label><input formControlName="description" /></div>
-  <div class="row">
-    <div class="field"><label>קטגוריה *</label><input formControlName="category" placeholder="למשל: קינוחים" /></div>
-    <div class="field"><label>זמן הכנה (דקות)</label><input type="number" formControlName="prepMinutes" /></div>
-    <div class="field"><label>מנות</label><input type="number" formControlName="servings" /></div>
-  </div>
-  <div class="field"><label>קישור לתמונה</label><input formControlName="imageUrl" dir="ltr" placeholder="https://..." /></div>
-  <div class="field"><label>מצרכים * (שורה לכל מצרך)</label><textarea rows="6" formControlName="ingredients"></textarea></div>
-  <div class="field"><label>שלבי הכנה * (שורה לכל שלב)</label><textarea rows="6" formControlName="steps"></textarea></div>
+    <fieldset>
+      <legend>פרטים כלליים</legend>
+      <div class="field"><label>שם המתכון *</label><input formControlName="title" placeholder="למשל: עוגת שוקולד" /></div>
+      <div class="field"><label>תיאור קצר</label><input formControlName="description" placeholder="משפט אחד שמסביר למה זה טעים" /></div>
+      <div class="row">
+        <div class="field"><label>קטגוריה *</label><input formControlName="category" placeholder="למשל: קינוחים" /></div>
+        <div class="field"><label>זמן הכנה (דקות)</label><input type="number" formControlName="prepMinutes" /></div>
+        <div class="field"><label>מנות</label><input type="number" formControlName="servings" /></div>
+      </div>
+      <div class="field">
+        <label>קישור לתמונה</label>
+        <input formControlName="imageUrl" dir="ltr" placeholder="https://..." />
+        @if (form.controls.imageUrl.value) {
+          <img class="preview" [src]="form.controls.imageUrl.value" alt="תצוגה מקדימה" />
+        }
+      </div>
+    </fieldset>
 
-  @if (form.invalid && form.touched) {
-    <p class="error">יש למלא את כל שדות החובה (*)</p>
-  }
-  @if (saveError()) {
-    <p class="error">{{ saveError() }}</p>
-  }
-  <button class="btn" type="submit" [disabled]="saving()">{{ saving() ? 'שומר...' : 'שמירת מתכון' }}</button>
-</form>
+    <fieldset>
+      <legend>המתכון</legend>
+      <div class="field"><label>מצרכים *</label><small>שורה לכל מצרך</small><textarea rows="7" formControlName="ingredients" placeholder="2 ביצים&#10;כוס קמח"></textarea></div>
+      <div class="field"><label>שלבי הכנה *</label><small>שורה לכל שלב</small><textarea rows="7" formControlName="steps" placeholder="מחממים תנור ל-180 מעלות&#10;מערבבים את כל החומרים"></textarea></div>
+    </fieldset>
+
+    @if (form.invalid && form.touched) {
+      <p class="error-msg">יש למלא את כל שדות החובה (*)</p>
+    }
+    @if (saveError()) {
+      <p class="error-msg">{{ saveError() }}</p>
+    }
+    <div class="footer">
+      <a routerLink="/" class="btn ghost">ביטול</a>
+      <button class="btn" type="submit" [disabled]="saving()">{{ saving() ? 'שומר...' : 'שמירת מתכון' }}</button>
+    </div>
+  </form>
+</div>

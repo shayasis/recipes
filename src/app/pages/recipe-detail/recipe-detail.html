@@ -1,32 +1,69 @@
 @if (recipe(); as r) {
-  <article>
-    <a routerLink="/" class="back">→ חזרה לכל המתכונים</a>
-    <img [src]="r.imageUrl || 'https://placehold.co/1000x500?text=Recipe'" [alt]="r.title" />
-    <h1>{{ r.title }}</h1>
-    <p class="desc">{{ r.description }}</p>
-    <p class="meta">{{ r.category }} · ⏱ {{ r.prepMinutes }} דק׳ · 🍽 {{ r.servings }} מנות</p>
+  <article class="container fade-in">
+    <a routerLink="/" class="back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      כל המתכונים
+    </a>
+
+    <div class="hero" [class.no-image]="!r.imageUrl">
+      @if (r.imageUrl) {
+        <img [src]="r.imageUrl" [alt]="r.title" />
+      }
+      <div class="hero-content">
+        <span class="tag">{{ r.category }}</span>
+        <h1>{{ r.title }}</h1>
+        @if (r.description) { <p>{{ r.description }}</p> }
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="stats">
+        <div class="stat"><span class="icon">⏱</span><div><strong>{{ r.prepMinutes }} דק׳</strong><small>זמן הכנה</small></div></div>
+        <div class="stat"><span class="icon">👥</span><div><strong>{{ r.servings }}</strong><small>מנות</small></div></div>
+        <div class="stat"><span class="icon">🧂</span><div><strong>{{ r.ingredients.length }}</strong><small>מצרכים</small></div></div>
+      </div>
+      <div class="actions">
+        <button class="btn" (click)="exportWord()" [disabled]="exporting()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>
+          {{ exporting() ? 'מכין קובץ...' : 'יצוא ל-Word' }}
+        </button>
+        @if (auth.isAdmin()) {
+          <button class="btn danger" (click)="remove()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>
+            מחיקה
+          </button>
+        }
+      </div>
+    </div>
 
     <div class="cols">
-      <section>
+      <section class="panel ingredients">
         <h2>מצרכים</h2>
+        <p class="hint">סמנו מה כבר יש לכם</p>
         <ul>
-          @for (i of r.ingredients; track $index) { <li>{{ i }}</li> }
+          @for (i of r.ingredients; track $index) {
+            <li [class.done]="checked().has($index)" (click)="toggle($index)">
+              <span class="check"></span>{{ i }}
+            </li>
+          }
         </ul>
       </section>
-      <section>
+      <section class="steps">
         <h2>אופן ההכנה</h2>
         <ol>
-          @for (s of r.steps; track $index) { <li>{{ s }}</li> }
+          @for (s of r.steps; track $index) {
+            <li><span class="num">{{ $index + 1 }}</span><p>{{ s }}</p></li>
+          }
         </ol>
       </section>
     </div>
-
-    @if (auth.isAdmin()) {
-      <button class="btn secondary" (click)="remove()">מחיקת מתכון</button>
-    }
   </article>
 } @else if (recipeService.loading()) {
-  <p>טוען...</p>
+  <div class="container"><div class="skeleton" style="height: 420px; margin-top: 64px"></div></div>
 } @else {
-  <p>המתכון לא נמצא. <a routerLink="/">חזרה</a></p>
+  <div class="container missing">
+    <div class="missing-icon">🤷</div>
+    <p>המתכון לא נמצא.</p>
+    <a routerLink="/" class="btn secondary">חזרה לכל המתכונים</a>
+  </div>
 }
