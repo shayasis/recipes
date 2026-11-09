@@ -73,11 +73,53 @@ article { max-width: 1000px; padding-top: 24px; }
   small { color: var(--muted); font-size: .8rem; }
 }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.btn.whatsapp {
-  background: #25d366;
-  box-shadow: 0 6px 16px -6px rgba(37, 211, 102, .6);
-  &:hover { background: #1ebe5a; box-shadow: 0 10px 22px -8px rgba(37, 211, 102, .7); }
+.icon-btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s, background .15s;
+  svg { width: 22px; height: 22px; }
+  &:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  &:disabled { cursor: default; transform: none; }
+  &.whatsapp { color: #25d366; &:hover { background: #e9fbf0; } }
+  &.word { color: #2b579a; &:hover { background: #eaf0f9; } }
+  &.danger { color: var(--danger); &:hover { background: #fdeeee; } }
+  // Tooltip with the button's name
+  &::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--text);
+    color: #fff;
+    font-size: .78rem;
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s, transform .15s;
+  }
+  &:hover::after { opacity: 1; transform: translateX(-50%); }
 }
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid #d4def0;
+  border-top-color: #2b579a;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .cols { display: grid; grid-template-columns: 1fr 1.5fr; gap: 28px; align-items: start; }
 h2 { font-size: 1.45rem; margin: 0 0 4px; }
@@ -162,7 +204,6 @@ h2 { font-size: 1.45rem; margin: 0 0 4px; }
   .ingredients { position: static; }
   .hero { min-height: 300px; border-radius: 22px; }
   .hero-content { padding: 24px; }
-  .actions { width: 100%; .btn { flex: 1; } }
   .stats { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .stat { flex-direction: column; text-align: center; gap: 6px; padding: 12px 6px; }
 }
