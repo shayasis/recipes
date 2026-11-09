@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "thequeensrecipes",
+    "public": "dist/recipes/browser",
+    "ignore": ["firebase.json", "**/.*"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}

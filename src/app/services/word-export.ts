@@ -75,7 +75,7 @@ export async function exportRecipeToWord(r: Recipe): Promise<void> {
   );
 
   const doc = new Document({
-    creator: 'המתכונים שלי',
+    creator: 'סבתא מלכה מבשלת',
     title: r.title,
     sections: [{ properties: {}, children }],
   });
